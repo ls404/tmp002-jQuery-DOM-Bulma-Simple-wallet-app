@@ -40,6 +40,8 @@ $(document).ready(function() {
     return false;
   });
 
+
+
   // TODO Chart starts here
 
   // Create a new line chart object where as first parameter we pass in a selector
@@ -69,14 +71,31 @@ $(document).ready(function() {
 
   //TODO UI controller
 
+  let DOMstrings = {
+    inputType: walletType, // inc or exp from a global module var
+    inputDescription: ".exp__add-description",
+    inputValue: ".exp__add-value",
+    inputBtnExpenses: ".add__btn-expenses",
+    inputBtnIncome  :".add__btn-income",
+    modalAddExpense: "#add-expense",
+    btnModalSaveAddExpense: ".save-modal-add-expense",
+    btnModalCloseAddExpense: ".close-modal-add-expense"
+
+  };
+
   let uIController = (function() {
     return {
       getInput: function() {
         return {
-          type: walletType, // inc or exp from a global module var
-          description: document.querySelector(".exp__add-description").value,
-          value: document.querySelector(".exp__add-value").value
+          type: DOMstrings.inputType,
+          description: document.querySelector(DOMstrings.inputDescription)
+            .value,
+          value: document.querySelector(DOMstrings.inputValue).value
         };
+      },
+
+      getDOMstrings: function() {
+        return DOMstrings;
       }
     };
   })();
@@ -84,30 +103,32 @@ $(document).ready(function() {
   // TODO controller
 
   let controller = (function(walletCtrl, uIctrl) {
+    let DOM = uIctrl.getDOMstrings();
+
     let ctrlAddItem = function() {
-      document.querySelector("#add-expense").className += " is-active";
+      document.querySelector(DOM.modalAddExpense).className += " is-active";
       walletType = "exp"; //changing global for module variable!!!
 
-      let closeModalBtns = document.querySelectorAll(
-        ".close-modal-add-expense"
+      let closeModalBtns = document.querySelectorAll(DOM.btnModalCloseAddExpense
+
       );
 
       for (let i of closeModalBtns) {
         console.log(i);
         i.addEventListener("click", function() {
           // document.querySelector("#add-expense".className = "modal")
-          document.querySelector("#add-expense").classList.remove("is-active");
+          document.querySelector(DOM.modalAddExpense).classList.remove("is-active");
         });
       }
 
       // 1. Get the field input data
       document
-        .querySelector(".save-modal-add-expense")
+        .querySelector(DOM.btnModalSaveAddExpense)
         .addEventListener("click", function() {
           let input = uIctrl.getInput();
           console.log(input);
           // TODO To be executed only if values are valid
-          document.querySelector("#add-expense").classList.remove("is-active");
+          document.querySelector(DOM.modalAddExpense).classList.remove("is-active");
         });
 
       // 2. Add the item to the budget controller
@@ -120,25 +141,13 @@ $(document).ready(function() {
     };
 
     document
-      .querySelector(".add__btn-expenses")
+      .querySelector(DOM.inputBtnExpenses)
       .addEventListener("click", ctrlAddItem);
 
-    // Used with onkeypress to filter only numbers(and dot) during form entry
-    // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeypress
-    //Example:
-    // <p>Enter numbers only:
-    // <input type="text" name="myInput" onkeypress="return numbersOnly(this, event);" onpaste="return false;" />
-    // </p>
-    function numbersOnly(oToCheckField, oKeyEvent) {
-      return (
-        oKeyEvent.charCode === 0 ||
-        /\d|\./.test(String.fromCharCode(oKeyEvent.charCode))
-      );
-    }
 
     // starts add expense modal
     document
-      .querySelector(".add__btn-income")
+      .querySelector(DOM.inputBtnIncome)
       .addEventListener("click", function() {
         console.log("Hola add__btn-income was just clicked!!!");
       });
@@ -151,3 +160,20 @@ $(document).ready(function() {
     });
   })(walletController, uIController);
 });
+
+
+
+
+
+    // Used with onkeypress to filter only numbers(and dot) during form entry
+    // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeypress
+    //Example:
+    // <p>Enter numbers only:
+    // <input type="text" name="myInput" onkeypress="return numbersOnly(this, event);" onpaste="return false;" />
+    // </p>
+  function numbersOnly(oToCheckField, oKeyEvent) {
+    return (
+      oKeyEvent.charCode === 0 ||
+      /\d|\./.test(String.fromCharCode(oKeyEvent.charCode))
+    );
+  }
