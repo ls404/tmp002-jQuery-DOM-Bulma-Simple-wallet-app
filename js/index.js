@@ -1,6 +1,8 @@
 // import * as Chartist from "Chart.bundle.min.js";
 
 $(document).ready(function() {
+  let walletType;
+
   $.mobile.changePage("#general");
 
   $(document).on("swipeleft", ".ui-page", function(event) {
@@ -67,13 +69,24 @@ $(document).ready(function() {
 
   //TODO UI controller
 
-  let uIController = (function() {})();
+  let uIController = (function() {
+    return {
+      getInput: function() {
+        return {
+          type: walletType, // inc or exp from a global module var
+          description: document.querySelector(".exp__add-description").value,
+          value: document.querySelector(".exp__add-value").value
+        };
+      }
+    };
+  })();
 
   // TODO controller
 
   let controller = (function(walletCtrl, uIctrl) {
     let ctrlAddItem = function() {
       document.querySelector("#add-expense").className += " is-active";
+      walletType = "exp"; //changing global for module variable!!!
 
       let closeModalBtns = document.querySelectorAll(
         ".close-modal-add-expense"
@@ -88,6 +101,14 @@ $(document).ready(function() {
       }
 
       // 1. Get the field input data
+      document
+        .querySelector(".save-modal-add-expense")
+        .addEventListener("click", function() {
+          let input = uIctrl.getInput();
+          console.log(input);
+          // TODO To be executed only if values are valid
+          document.querySelector("#add-expense").classList.remove("is-active");
+        });
 
       // 2. Add the item to the budget controller
 
@@ -102,13 +123,6 @@ $(document).ready(function() {
       .querySelector(".add__btn-expenses")
       .addEventListener("click", ctrlAddItem);
 
-    // May be moved into ctrlAddItem
-    // document
-    //   .querySelector(".close-modal-add-expense")
-    //   .addEventListener("click", function () {
-    //     document.querySelector("#add-expense").className = "modal";
-    //   });
-
     // Used with onkeypress to filter only numbers(and dot) during form entry
     // https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeypress
     //Example:
@@ -122,6 +136,7 @@ $(document).ready(function() {
       );
     }
 
+    // starts add expense modal
     document
       .querySelector(".add__btn-income")
       .addEventListener("click", function() {
