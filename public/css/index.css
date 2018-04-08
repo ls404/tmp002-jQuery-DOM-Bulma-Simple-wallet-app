@@ -1,0 +1,115 @@
+/*Piggybank picture styling*/
+
+#piggy-placeholder {
+    background-image: URL("../images/piggybankOP30.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+
+    animation: piggyShadow 5s ease-in;
+    animation-iteration-count: infinite;
+    backface-visibility: hidden;
+}
+
+@keyframes piggyShadow {
+    0% {
+         filter: drop-shadow(3px 3px 5px #ff00ff6e)
+    }
+
+    50% {
+        filter: drop-shadow(3px 3px 5px #4aa73582)
+    }
+
+    100% {
+         filter: drop-shadow(3px 3px 5px rgba(255, 0, 255, 0.44))
+    }
+}
+
+.button-value {
+    font-size: 1.6em;
+}
+
+/*Income and Expense buttons*/
+
+hr.income {
+  border: 0;
+  height: 0;
+  margin-bottom: 0;
+  box-shadow: 0 0 3px 3px #7ed56f;
+}
+
+hr.expense {
+  border: 0;
+  height: 0;
+  margin-bottom: 0;
+  box-shadow: 0 0 3px 3px #f89b9b;
+}
+
+.buttondiv{
+    margin-left: 1em;
+    margin-right: 1em;
+  /*align-items: flex-start;*/
+    /*padding-left: 1em;*/
+  /*padding-right: 1em;*/
+  /*padding-top: 0.5em;*/
+	/*display:block;*/
+	/*border-style:solid;*/
+	/*border-color: #666 #aaa #bbb #888;*/
+	/*border-width:0.5px 0.5px 0.5px 0.5px;*/
+	/*width:10em;*/
+	/*height:2em;*/
+	background: #828282;
+	color: #ffffff;
+	/*line-height: 1.2;*/
+	text-align:left;
+	text-decoration:none;
+	/*font-weight:900;*/
+    text-shadow: none;
+    font-size: 0.8em;
+
+}
+
+/*Chart starts here
+*/
+
+.ct-series-a .ct-slice-donut-solid {
+  /* give the donut slice a custom colour */
+  /* stroke: #4aa73582 !important; */
+  fill: #4aa73582 !important;
+  /* customize stroke width of the donut slices in CSS. Note that this property is already set in JavaScript and label positioning also relies on this. In the right situation though it can be very useful to style this property. You need to use !important to override the style attribute */
+  stroke-width: 5px !important;
+  /* create modern looking rounded donut charts */
+  stroke-linecap: round;
+}
+
+.ct-series-b .ct-slice-donut-solid {
+  /* give the donut slice a custom colour */
+  /* stroke: #ff00ff6e !important; */
+  fill: #f89b9b !important;
+  /* customize stroke width of the donut slices in CSS. Note that this property is already set in JavaScript and label positioning also relies on this. In the right situation though it can be very useful to style this property. You need to use !important to override the style attribute */
+  stroke-width: 5px !important;
+  /* create modern looking rounded donut charts */
+  stroke-linecap: round;
+}
+
+/* Rules for tabular pages (income and expenses) */
+
+#income {
+background-color: #9afbc8;
+}
+
+#expenses {
+  background-color: #f89b9b;
+  padding: 1em;
+}
+
+/*Cards...*/
+
+.margin-l-r {
+    margin: 0 1em;
+}
+
+td.value {
+    text-align: right;
+}
