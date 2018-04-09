@@ -1,9 +1,9 @@
 /*Piggybank picture styling*/
 
 #piggy-placeholder {
-    background-image: URL("../images/piggybankOP30.png");
     background-size: contain;
     background-repeat: no-repeat;
+    background-image: url("../images/piggybankOP30.png");
     background-position-x: center;
     background-position-y: center;
 
@@ -56,22 +56,10 @@ hr.expense {
 .buttondiv{
     margin-left: 1em;
     margin-right: 1em;
-  /*align-items: flex-start;*/
-    /*padding-left: 1em;*/
-  /*padding-right: 1em;*/
-  /*padding-top: 0.5em;*/
-	/*display:block;*/
-	/*border-style:solid;*/
-	/*border-color: #666 #aaa #bbb #888;*/
-	/*border-width:0.5px 0.5px 0.5px 0.5px;*/
-	/*width:10em;*/
-	/*height:2em;*/
 	background: #828282;
 	color: #ffffff;
-	/*line-height: 1.2;*/
 	text-align:left;
 	text-decoration:none;
-	/*font-weight:900;*/
     text-shadow: none;
     font-size: 0.8em;
 
