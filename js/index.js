@@ -206,6 +206,8 @@ var uIController = (function () {
             // TODO Works only for modal for expenses - revenue modal is not created (if it will be)....
             document.querySelector(DOMstrings.inputValue).value = "";
             document.querySelector(DOMstrings.inputDescription).value = "";
+            document.querySelector(DOMstrings.inputValueInc).value = "";
+            document.querySelector(DOMstrings.inputDescriptionInc).value = "";
         },
 
         displayTotals: function (obj) {
@@ -237,6 +239,10 @@ var uIController = (function () {
 
         setModalExpenseFocus: function () {
             document.querySelector(DOMstrings.inputDescription).focus();
+        },
+
+        setModalIncoFocus: function () {
+            document.querySelector(DOMstrings.inputDescriptionInc).focus();
         },
 
         getDOMstrings: function () {
@@ -352,7 +358,7 @@ var controller = (function (walletCtrl, uIctrl) {
             ).className +=
               " is-active";
             // var walletType = "inc"; //changing module variable!!!
-            uIctrl.setModalExpenseFocus();
+            uIctrl.setModalIncoFocus();
             // 1. Get the field input data
             document
               .querySelector(DOM.btnModalSaveAddIncome)
