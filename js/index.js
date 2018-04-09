@@ -9,7 +9,7 @@ $(document).ready(function() {
 $(document).on("swipeleft", ".ui-page", function(event) {
   if (event.handled !== true) {
     // This will prevent event triggering more then once
-    var nextpage = $.mobile.activePage.next('[data-role="page"]');
+    var nextpage = $.mobile.activePage.next("[data-role=\"page\"]");
     // swipe using id of next page if exists
     if (nextpage.length > 0) {
       $.mobile.changePage(
@@ -27,7 +27,7 @@ $(document).on("swipeleft", ".ui-page", function(event) {
 $(document).on("swiperight", ".ui-page", function(event) {
   if (event.handled !== true) {
     // This will prevent event triggering more then once
-    var prevpage = $(this).prev('[data-role="page"]');
+    var prevpage = $(this).prev("[data-role=\"page\"]");
     if (prevpage.length > 0) {
       $.mobile.changePage(
         prevpage,
@@ -110,9 +110,9 @@ let walletController = (function() {
       data.allItems[type].push(newItem);
       return newItem;
     },
-      testing: function () {
-          console.log(data);
-      }
+    testing: function() {
+      console.log(data);
+    }
   };
   // }
 })();
@@ -128,7 +128,9 @@ var uIController = (function() {
     inputBtnIncome: ".add__btn-income",
     modalAddExpense: "#add-expense",
     btnModalSaveAddExpense: ".save-modal-add-expense",
-    btnModalCloseAddExpense: ".close-modal-add-expense"
+    btnModalCloseAddExpense: ".close-modal-add-expense",
+    incomeContainer: ".income__list",
+    expensesContainer: ".expenses__list"
   };
 
   return {
@@ -138,6 +140,33 @@ var uIController = (function() {
         description: document.querySelector(DOMstrings.inputDescription).value,
         value: document.querySelector(DOMstrings.inputValue).value
       };
+    },
+    // TODO HERENOW
+    addListItem: function(obj, type) {
+        let html, newHtml, element;
+      //Create HTML string with placeholder tag
+      // Replace the placeholder text with some actual data
+
+        html = `<div class="column box margin-l-r is-4-tablet" id="${type}"-${obj.id}> 
+                    <table class="table is-fullwidth"> 
+                        <tr class=""> 
+                            <td class="">${obj.description}</td>
+                            <td class="value"><span class="tag">${obj.value}</span></td>
+                        </tr>
+                    </table>
+                </div>`;
+
+      // Insert HTML into the DOM
+      if (type="exp") {
+        element = DOMstrings.expensesContainer;
+      } else if (type="inc") {
+        element = DOMstrings.incomeContainer;
+      };
+
+      document.querySelector(element).insertAdjacentHTML('beforeend', html);
+
+
+
     },
 
     getDOMstrings: function() {
@@ -181,19 +210,29 @@ var controller = (function(walletCtrl, uIctrl) {
         .addEventListener("click", function() {
           input = uIctrl.getInput("exp");
           console.log("***111>>>", input);
-          // console.log(input);
+          // 2. Add the item to the budget controller
+          console.log(
+            document
+              .querySelector(DOM.modalAddExpense)
+              .classList.contains("is-active")
+          );
+          // TODO solution for a strange repetitions
+          if (
+            document
+              .querySelector(DOM.modalAddExpense)
+              .classList.contains("is-active")
+          ) {
+            newItem = walletCtrl.addItem(
+              input.type,
+              input.description,
+              input.value
+            );
+            uIctrl.addListItem(newItem,"exp");
+          }
           // TODO To be executed only if values are valid
           document
             .querySelector(DOM.modalAddExpense)
             .classList.remove("is-active");
-          // 2. Add the item to the budget controller
-          //TODO check
-          console.log(">>>>>>>>>>>", input);
-          newItem = walletCtrl.addItem(
-            input.type,
-            input.description,
-            input.value
-          );
         });
 
       // 3. Add the item to the UI
