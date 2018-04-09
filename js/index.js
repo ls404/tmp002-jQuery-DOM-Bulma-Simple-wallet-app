@@ -194,7 +194,7 @@ var uIController = (function() {
         obj.totalIncome;
       document.querySelector(DOMstrings.buttonValueExpenses).textContent =
         obj.totalExpenses;
-
+/*
       // TODO refresh chart!!!
       chart = new Chartist.Pie(
         ".ct-chart",
@@ -209,7 +209,7 @@ var uIController = (function() {
           donutSolid: true,
           startAngle: 0,
           showLabel: true,
-          height: 200,
+          height: 200
           // donut: true,
           // donutWidth: 60,
           // startAngle: 270,
@@ -228,6 +228,68 @@ var uIController = (function() {
           // }
         }
       );
+
+      */
+      /*
+      Chart.js starts here
+       */
+      var ctx = document.getElementById("myChart").getContext("2d");
+
+      var data = {
+        labels: ["Income",  "Expenses"],
+        datasets: [
+          {
+            backgroundColor: [
+              "#2ecc71",
+              // "#3498db",
+              // "#95a5a6",
+              // "#9b59b6",
+              // "#f1c40f",
+              "#e74c3c",
+              // "#34495e"
+            ],
+            data: [obj.totalIncome, obj.totalExpenses],
+            hashid: ["a1", "a2"]
+          }
+        ]
+      };
+
+      var myChart = new Chart(ctx, {
+        type: "doughnut",
+        data: data,
+        options: {
+          legend: {
+            display: false, //true
+            position: "right",
+            labels: {
+              padding: 8,
+              usePointStyle: true
+            }
+          },
+          tooltips: {
+            callbacks: {
+              label: function(tooltipItem, data) {
+                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                var tooltipLabel = data.labels[tooltipItem.index];
+                var tooltipData = allData[tooltipItem.index];
+                var total = 0;
+                for (var i in allData) {
+                  total += allData[i];
+                }
+                var tooltipPercentage = Math.round(tooltipData / total * 100);
+                return (
+                  tooltipLabel +
+                  ": " +
+                  tooltipData +
+                  " (" +
+                  tooltipPercentage +
+                  "%)"
+                );
+              }
+            }
+          }
+        }
+      });
     },
 
     setModalExpenseFocus: function() {

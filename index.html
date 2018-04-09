@@ -17,6 +17,7 @@
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.js"></script>
     <script src="js/chartist.min.js"></script>
+    <script src="js/Chart.bundle.min.js"></script>
 </head>
 <body>
 <!--Income page-->
@@ -83,10 +84,12 @@
             </div>
         </div>
     </div>
-
-    <p class="chartist">
-        <div class="ct-chart ct-perfect-fourth"></div>
-    </p>
+    <div class="container-chart" style="width:80%; margin: 15px auto;">
+    <canvas id="myChart"></canvas>
+  </div>
+    <!--<div class="chartist" style="width:40%; margin: 15px auto;>-->
+        <!--<div class="ct-chart ct-perfect-fourth"></div>-->
+    <!--</div>-->
 </div>
 
 <!--Expenses page-->
@@ -100,7 +103,7 @@
 
         </p>
 
-        <div class="container">
+        <iv class="container">
             <div class="columns is-multiline is-centered expenses__list">
                 <!--<div class="column box margin-l-r is-4-tablet">-->
                     <!--<table class="table is-fullwidth">-->
@@ -112,7 +115,7 @@
                 <!--</div>-->
 
             </div>
-        </div>
+        </iv>
     </div>
 </div>
 
