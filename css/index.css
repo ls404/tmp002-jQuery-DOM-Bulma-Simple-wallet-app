@@ -30,7 +30,12 @@
     font-size: 1.6em;
 }
 
-#btn-add-expense,
+#add__btn-income, #add__btn-expense, .btn_btm-right {
+    position: fixed !important;
+    bottom: 25px;
+    right:25px;
+    z-index: 1000;
+}
 
 /*Income and Expense buttons*/
 
