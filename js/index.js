@@ -9,7 +9,7 @@ $(document).ready(function() {
 $(document).on("swipeleft", ".ui-page", function(event) {
   if (event.handled !== true) {
     // This will prevent event triggering more then once
-    var nextpage = $.mobile.activePage.next("[data-role=\"page\"]");
+    var nextpage = $.mobile.activePage.next('[data-role="page"]');
     // swipe using id of next page if exists
     if (nextpage.length > 0) {
       $.mobile.changePage(
@@ -27,7 +27,7 @@ $(document).on("swipeleft", ".ui-page", function(event) {
 $(document).on("swiperight", ".ui-page", function(event) {
   if (event.handled !== true) {
     // This will prevent event triggering more then once
-    var prevpage = $(this).prev("[data-role=\"page\"]");
+    var prevpage = $(this).prev('[data-role="page"]');
     if (prevpage.length > 0) {
       $.mobile.changePage(
         prevpage,
@@ -110,6 +110,15 @@ let walletController = (function() {
       data.allItems[type].push(newItem);
       return newItem;
     },
+
+    calculateTotal: function(type) {
+      let sum = 0;
+      data.allItems[type].forEach(function(curr) {
+        sum = sum + curr.value;
+      });
+      data.totals[type] = sum;
+    },
+
     testing: function() {
       console.log(data);
     }
@@ -138,35 +147,45 @@ var uIController = (function() {
       return {
         type: typeLoaded,
         description: document.querySelector(DOMstrings.inputDescription).value,
-        value: document.querySelector(DOMstrings.inputValue).value
+        value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
       };
     },
-    // TODO HERENOW
+    //Create HTML string with placeholder tag
+    // Replace the placeholder text with some actual data
     addListItem: function(obj, type) {
-        let html, newHtml, element;
-      //Create HTML string with placeholder tag
-      // Replace the placeholder text with some actual data
+      let html, newHtml, element;
 
-        html = `<div class="column box margin-l-r is-4-tablet" id="${type}"-${obj.id}> 
+      html = `<div class="column box margin-l-r is-4-tablet" id="${type}"-${
+        obj.id
+      }> 
                     <table class="table is-fullwidth"> 
                         <tr class=""> 
                             <td class="">${obj.description}</td>
-                            <td class="value"><span class="tag">${obj.value}</span></td>
+                            <td class="value"><span class="tag is-medium">${
+                              obj.value
+                            }</span></td>
                         </tr>
                     </table>
                 </div>`;
 
       // Insert HTML into the DOM
-      if (type="exp") {
+      if ((type = "exp")) {
         element = DOMstrings.expensesContainer;
-      } else if (type="inc") {
+      } else if ((type = "inc")) {
         element = DOMstrings.incomeContainer;
-      };
+      }
 
-      document.querySelector(element).insertAdjacentHTML('beforeend', html);
+      document.querySelector(element).insertAdjacentHTML("beforeend", html);
+    },
 
+    clearFields: function() {
+      // TODO Works only for modal for expenses - revenue modal is not created (if it will be)....
+      document.querySelector(DOMstrings.inputValue).value = "";
+      document.querySelector(DOMstrings.inputDescription).value = "";
+    },
 
-
+    setModalExpenseFocus: function() {
+      document.querySelector(DOMstrings.inputDescription).focus();
     },
 
     getDOMstrings: function() {
@@ -196,6 +215,15 @@ var controller = (function(walletCtrl, uIctrl) {
       });
     }
 
+    var updateBudget = function() {
+      // 4. Calculate the Wallet
+        walletCtrl.calculateTotal('exp');
+        walletCtrl.calculateTotal('inc');
+        console.log(walletController.testing());
+      // 4a update chart
+      // 5. Display the budget on UI
+    };
+
     var ctrlAddItem = function() {
       let newItem; //input is already declared
       document.querySelector(
@@ -203,43 +231,44 @@ var controller = (function(walletCtrl, uIctrl) {
       ).className +=
         " is-active";
       var walletType = "exp"; //changing module variable!!!
-
+      uIctrl.setModalExpenseFocus();
       // 1. Get the field input data
       document
         .querySelector(DOM.btnModalSaveAddExpense)
         .addEventListener("click", function() {
           input = uIctrl.getInput("exp");
-          console.log("***111>>>", input);
           // 2. Add the item to the budget controller
           console.log(
             document
               .querySelector(DOM.modalAddExpense)
               .classList.contains("is-active")
           );
-          // TODO solution for a strange repetitions
+          // TODO - done solution for a strange repetitions
           if (
             document
               .querySelector(DOM.modalAddExpense)
-              .classList.contains("is-active")
+              .classList.contains("is-active") &&
+            input.description !== "" &&
+            !isNaN(input.value) &&
+            input.value > 0
           ) {
             newItem = walletCtrl.addItem(
               input.type,
               input.description,
               input.value
             );
-            uIctrl.addListItem(newItem,"exp");
+            // 3. Add the item to the UI
+            uIctrl.addListItem(newItem, "exp");
+            uIctrl.clearFields();
+            updateBudget();
           }
-          // TODO To be executed only if values are valid
+          // closes the expense entry mpodal
           document
             .querySelector(DOM.modalAddExpense)
             .classList.remove("is-active");
         });
 
-      // 3. Add the item to the UI
 
-      // 4. Calculate the Wallet
-
-      // 5. Display the budget on UI
     };
 
     document
@@ -270,13 +299,13 @@ var controller = (function(walletCtrl, uIctrl) {
 })(walletController, uIController);
 
 // });
-
-// Used with onkeypress to filter only numbers(and dot) during form entry
-// https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeypress
-//Example:
-// <p>Enter numbers only:
-// <input type="text" name="myInput" onkeypress="return numbersOnly(this, event);" onpaste="return false;" />
-// </p>
+/*
+Used with onkeypress to filter only numbers(and dot) during form entry
+https://developer.mozilla.org/en-US/docs/Web/API/GlobalEventHandlers/onkeypress
+Example:
+<p>Enter numbers only:
+<input type="text" name="myInput" onkeypress="return numbersOnly(this, event);" onpaste="return false;" />
+</p> */
 function numbersOnly(oToCheckField, oKeyEvent) {
   return (
     oKeyEvent.charCode === 0 ||
