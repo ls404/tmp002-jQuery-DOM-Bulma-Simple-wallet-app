@@ -205,11 +205,27 @@ var uIController = (function() {
         },
         {
           donut: true,
-          donutWidth: 60,
+          donutWidth: 40,
           donutSolid: true,
-          startAngle: 270,
+          startAngle: 0,
           showLabel: true,
-          height: 200
+          height: 200,
+          // donut: true,
+          // donutWidth: 60,
+          // startAngle: 270,
+          // total: 200,
+          // showLabel: false,
+          // chartPadding: 10,
+          // axisX: {
+          //   showGrid: false,
+          //   showLabel: false,
+          //   offset: -60
+          // },
+          // axisY: {
+          //   showGrid: false,
+          //   showLabel: false,
+          //   offset: 0
+          // }
         }
       );
     },
@@ -321,7 +337,6 @@ var controller = (function(walletCtrl, uIctrl) {
 
     var ctrlAddItemIncome = function() {
       let newItem; //input is already declared
-
 
       document.querySelector(
         "#add-income" /*DOM.modalAddExpense */

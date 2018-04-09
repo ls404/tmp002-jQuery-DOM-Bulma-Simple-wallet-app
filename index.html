@@ -52,12 +52,18 @@
 <div data-role="page" id="general">
     <section class="hero is-halfheight">
         <div class="hero-body  has-text-centered" id="piggy-placeholder">
+
             <div class="container">
+                            <div id="loader-wrapper">
+  <div id="loader"></div>
+  <div class="loader-section section-left"></div>
+  <div class="loader-section section-right"></div>
+</div>
                 <h1 class="subtitle">
                     Total balance
                 </h1>
                 <h2 class="title" id="total">
-                    2345.54
+                    0
                 </h2>
             </div>
         </div>
@@ -66,21 +72,21 @@
         <div class="columns is-mobile">
             <div class="column buttondiv">
                 <div>current income</div>
-                <span class="button-value" id="button-value-income">435.45</span>
+                <span class="button-value" id="button-value-income">0</span>
 
                 <hr class="income">
             </div>
             <div class="column buttondiv">
                 <div>current expenses</div>
-                <span class="button-value" id="button-value-expenses">2343.45</span>
+                <span class="button-value" id="button-value-expenses">0</span>
                 <hr class="expense">
             </div>
         </div>
     </div>
 
-    <div class="box">
+    <p class="chartist">
         <div class="ct-chart ct-perfect-fourth"></div>
-    </div>
+    </p>
 </div>
 
 <!--Expenses page-->
