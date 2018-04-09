@@ -110,7 +110,7 @@
                 <h1 class="subtitle">
                     Total balance
                 </h1>
-                <h2 class="title">
+                <h2 class="title" id="total">
                     2345.54
                 </h2>
             </div>
@@ -120,13 +120,13 @@
         <div class="columns is-mobile">
             <div class="column buttondiv">
                 <div>current income</div>
-                <span class="button-value">435.45</span>
+                <span class="button-value" id="button-value-income">435.45</span>
 
                 <hr class="income">
             </div>
             <div class="column buttondiv">
                 <div>current expenses</div>
-                <span class="button-value">2343.45</span>
+                <span class="button-value" id="button-value-expenses">2343.45</span>
                 <hr class="expense">
             </div>
         </div>
@@ -137,7 +137,9 @@
 
     <!-- <div class="columns"><p class="column">Last month chart:</p></div>
     <div> -->
-    <div class="ct-chart ct-perfect-fourth"></div>
+    <div class="box">
+        <div class="ct-chart ct-perfect-fourth"></div>
+    </div>
 </div>
 
 
@@ -227,43 +229,87 @@
 <div id="add-expense" class="modal">
     <div class="modal-background"></div>
     <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Expense</p>
-      <button class="close-modal-add-expense delete" aria-label="close"></button>
-    </header>
-    <section class="modal-card-body">
-    <!--<div class="modal-content">-->
-        <div class="field">
-            <label class="label">Description</label>
-            <div class="control">
-                <input class="input exp__add-description" type="text" placeholder="e.g. Musaka" value="">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Expense</p>
+            <button class="close-modal-add-expense delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <!--<div class="modal-content">-->
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <input class="input exp__add-description" type="text" placeholder="e.g. Musaka" value="">
+                </div>
             </div>
-        </div>
-        <div class="field">
-            <label class="label">Amount</label>
-            <div class="control">
-                <input class="input exp__add-value" type="text" placeholder="e.g. 999.99" value="" onkeypress="return numbersOnly(this, event);">
+            <div class="field">
+                <label class="label">Amount</label>
+                <div class="control">
+                    <input class="input exp__add-value" type="text" placeholder="e.g. 999.99" value=""
+                           onkeypress="return numbersOnly(this, event);">
+                </div>
             </div>
-        </div>
-    <!--</div>-->
+
+
+            <!--</div>-->
         </section>
-    <footer class="modal-card-foot">
-      <button class="button save-modal-add-expense is-success">Save changes</button>
-      <button class="button close-modal-add-expense">Cancel</button>
-    </footer>
-  </div>
+        <footer class="modal-card-foot">
+            <button class="button save-modal-add-expense is-success">Save</button>
+            <button class="button close-modal-add-expense">Cancel</button>
+        </footer>
+    </div>
 
     <!--<div class="field">-->
-        <!--<p class="control">-->
-            <!--<button class="button is-success">-->
-                <!--Save-->
-            <!--</button>-->
-        <!--</p>-->
+    <!--<p class="control">-->
+    <!--<button class="button is-success">-->
+    <!--Save-->
+    <!--</button>-->
+    <!--</p>-->
     <!--</div>-->
     <button class="close-modal-add-expense modal-close is-large" aria-label="close"></button>
 </div>
 
+<div id="add-income" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Income</p>
+            <button class="close-modal-add-income delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <!--<div class="modal-content">-->
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <input class="input inc__add-description" type="text" placeholder="e.g. Discovered treasure" value="">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Amount</label>
+                <div class="control">
+                    <input class="input inc__add-value" type="text" placeholder="e.g. 999.99 (dot only!)" value=""
+                           onkeypress="return numbersOnly(this, event);">
+                </div>
+            </div>
 
-    <script src="js/index.js"></script>
+
+            <!--</div>-->
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button save-modal-add-income is-success">Save</button>
+            <button class="button close-modal-add-income">Cancel</button>
+        </footer>
+    </div>
+
+    <!--<div class="field">-->
+    <!--<p class="control">-->
+    <!--<button class="button is-success">-->
+    <!--Save-->
+    <!--</button>-->
+    <!--</p>-->
+    <!--</div>-->
+    <button class="close-modal-add-income modal-close is-large" aria-label="close"></button>
+</div>
+
+<script src="js/index.js"></script>
 </body>
 </html>
