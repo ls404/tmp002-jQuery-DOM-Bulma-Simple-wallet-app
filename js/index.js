@@ -6,8 +6,6 @@ $(document).ready(function() {
 });
 // let walletType; // No need for global variable
 
-
-
 // data structure
 
 let walletController = (function() {
@@ -76,7 +74,7 @@ let walletController = (function() {
   // }
 })();
 
-//TODO UI controller
+// UI controller
 
 var uIController = (function() {
   let DOMstrings = {
@@ -147,7 +145,7 @@ var uIController = (function() {
     },
 
     clearFields: function() {
-      // TODO Works only for modal for expenses - revenue modal is not created (if it will be)....
+      
       document.querySelector(DOMstrings.inputValue).value = "";
       document.querySelector(DOMstrings.inputDescription).value = "";
       document.querySelector(DOMstrings.inputValueInc).value = "";
@@ -155,25 +153,23 @@ var uIController = (function() {
     },
 
     displayTotals: function(obj) {
-        document.querySelector(DOMstrings.totalWalletFront).textContent =
-          obj.totalIncome - obj.totalExpenses;
-        document.querySelector(DOMstrings.buttonValueIncome).textContent =
-          obj.totalIncome;
-        document.querySelector(DOMstrings.buttonValueExpenses).textContent =
-          obj.totalExpenses;
+      document.querySelector(DOMstrings.totalWalletFront).textContent =
+        obj.totalIncome - obj.totalExpenses;
+      document.querySelector(DOMstrings.buttonValueIncome).textContent =
+        obj.totalIncome;
+      document.querySelector(DOMstrings.buttonValueExpenses).textContent =
+        obj.totalExpenses;
     },
-      /*
-      // TODO refresh chart!!!
+    /*
 
       /*
       Chart.js starts here
        */
-            // TODO refresh chart!!!
     refreshChart: function(obj) {
       var ctx = document.getElementById("myChart").getContext("2d");
 
       var data = {
-        labels: ["Income",  "Expenses"],
+        labels: ["Income", "Expenses"],
         datasets: [
           {
             backgroundColor: [
@@ -182,7 +178,7 @@ var uIController = (function() {
               // "#95a5a6",
               // "#9b59b6",
               // "#f1c40f",
-              "#e74c3c",
+              "#e74c3c"
               // "#34495e"
             ],
             data: [obj.totalIncome, obj.totalExpenses],
@@ -245,51 +241,51 @@ var uIController = (function() {
 })();
 
 /*
-TODO> CONTROLLER IIFI
-TODO>: walletCtrl = walletController (Model)
-TODO>: uIctrl = uIController (View)
+: CONTROLLER IIFI
+: walletCtrl = walletController (Model)
+: uIctrl = uIController (View)
  */
 var controller = (function(walletCtrl, uIctrl) {
-    $(document).on("swipeleft", ".ui-page", function(event) {
-  if (event.handled !== true) {
-    // This will prevent event triggering more then once
-    var nextpage = $.mobile.activePage.next('[data-role="page"]');
-    // swipe using id of next page if exists
-    if (nextpage.length > 0) {
-      $.mobile.changePage(
-        nextpage,
-        { transition: "slide", reverse: false },
-        true,
-        true
-      );
+  $(document).on("swipeleft", ".ui-page", function(event) {
+    if (event.handled !== true) {
+      // This will prevent event triggering more then once
+      var nextpage = $.mobile.activePage.next('[data-role="page"]');
+      // swipe using id of next page if exists
+      if (nextpage.length > 0) {
+        $.mobile.changePage(
+          nextpage,
+          { transition: "slide", reverse: false },
+          true,
+          true
+        );
         let wallet = walletCtrl.getTotals();
-  uIctrl.refreshChart(wallet);
+        uIctrl.refreshChart(wallet);
+      }
+      event.handled = true;
     }
-    event.handled = true;
-  };
 
-  return false;
-});
+    return false;
+  });
 
-$(document).on("swiperight", ".ui-page", function(event) {
-  if (event.handled !== true) {
-    // This will prevent event triggering more then once
-    var prevpage = $(this).prev('[data-role="page"]');
-    if (prevpage.length > 0) {
-      $.mobile.changePage(
-        prevpage,
-        { transition: "slide", reverse: true },
-        true,
-        true
-      );
-          let wallet = walletCtrl.getTotals();
-  uIctrl.refreshChart(wallet);
+  $(document).on("swiperight", ".ui-page", function(event) {
+    if (event.handled !== true) {
+      // This will prevent event triggering more then once
+      var prevpage = $(this).prev('[data-role="page"]');
+      if (prevpage.length > 0) {
+        $.mobile.changePage(
+          prevpage,
+          { transition: "slide", reverse: true },
+          true,
+          true
+        );
+        let wallet = walletCtrl.getTotals();
+        uIctrl.refreshChart(wallet);
+      }
+      event.handled = true;
     }
-    event.handled = true;
-  }
 
-  return false;
-});
+    return false;
+  });
 
   var setupEventListeners = function() {
     var input;
@@ -324,7 +320,7 @@ $(document).on("swiperight", ".ui-page", function(event) {
       console.log(walletController.testing());
 
       // 5. Display the budget on UI
-      // TODO chart will be updated inside the function later
+
       let wallet = walletCtrl.getTotals();
       console.log(">>>>>", wallet);
       uIctrl.displayTotals(wallet);
