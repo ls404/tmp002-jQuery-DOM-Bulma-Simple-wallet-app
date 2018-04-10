@@ -166,6 +166,8 @@ var uIController = (function() {
       Chart.js starts here
        */
     refreshChart: function(obj) {
+      //first chart is deleted to avoid duplicates
+      document.getElementById("chart-main").innerHTML = "<canvas id=\"myChart\"></canvas>";
       var ctx = document.getElementById("myChart").getContext("2d");
 
       var data = {
