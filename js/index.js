@@ -155,51 +155,21 @@ var uIController = (function() {
     },
 
     displayTotals: function(obj) {
-      document.querySelector(DOMstrings.totalWalletFront).textContent =
-        obj.totalIncome - obj.totalExpenses;
-      document.querySelector(DOMstrings.buttonValueIncome).textContent =
-        obj.totalIncome;
-      document.querySelector(DOMstrings.buttonValueExpenses).textContent =
-        obj.totalExpenses;
-/*
+        document.querySelector(DOMstrings.totalWalletFront).textContent =
+          obj.totalIncome - obj.totalExpenses;
+        document.querySelector(DOMstrings.buttonValueIncome).textContent =
+          obj.totalIncome;
+        document.querySelector(DOMstrings.buttonValueExpenses).textContent =
+          obj.totalExpenses;
+    },
+      /*
       // TODO refresh chart!!!
-      chart = new Chartist.Pie(
-        ".ct-chart",
-        {
-          labels: ["Income", "Expenses"],
-          series: [obj.totalIncome, obj.totalExpenses]
-          // fill: [red, green]
-        },
-        {
-          donut: true,
-          donutWidth: 40,
-          donutSolid: true,
-          startAngle: 0,
-          showLabel: true,
-          height: 200
-          // donut: true,
-          // donutWidth: 60,
-          // startAngle: 270,
-          // total: 200,
-          // showLabel: false,
-          // chartPadding: 10,
-          // axisX: {
-          //   showGrid: false,
-          //   showLabel: false,
-          //   offset: -60
-          // },
-          // axisY: {
-          //   showGrid: false,
-          //   showLabel: false,
-          //   offset: 0
-          // }
-        }
-      );
 
-      */
       /*
       Chart.js starts here
        */
+            // TODO refresh chart!!!
+    refreshChart: function(obj) {
       var ctx = document.getElementById("myChart").getContext("2d");
 
       var data = {
@@ -292,11 +262,12 @@ var controller = (function(walletCtrl, uIctrl) {
         true,
         true
       );
+        let wallet = walletCtrl.getTotals();
+  uIctrl.refreshChart(wallet);
     }
     event.handled = true;
   };
-  let wallet = walletCtrl.getTotals();
-  uIctrl.displayTotals(wallet);
+
   return false;
 });
 
@@ -311,11 +282,12 @@ $(document).on("swiperight", ".ui-page", function(event) {
         true,
         true
       );
+          let wallet = walletCtrl.getTotals();
+  uIctrl.refreshChart(wallet);
     }
     event.handled = true;
   }
-    let wallet = walletCtrl.getTotals();
-  uIctrl.displayTotals(wallet);
+
   return false;
 });
 
