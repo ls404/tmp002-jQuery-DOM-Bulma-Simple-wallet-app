@@ -57,8 +57,11 @@ walletController = (function() {
       let ids = data.allItems[type].map(function(current) {
         return current.id;
       });
-
+        console.log("type", type, "id", id, typeof id, "desc", desc, "val", val);
+        console.log("IDS");
+        console.table(ids);
       let index = ids.indexOf(id);
+        console.log("INDEX: ", index);
       //IMHERE
       if (index !== -1) {
         data.allItems[type][index]['description'] = desc;
@@ -520,19 +523,15 @@ var controller = (function(walletCtrl, uIctrl) {
     // EDIT MODAL FOR INCOME AND EXPENSES
     let editModal = function(event) {
       let deleteFlag = true;
-      console.log("edit modal is starting!!!:");
-      console.log(event);
-      console.log(event.toElement.id);
       id = event.toElement.id;
       //extract exp or inc + id number
       if (id.startsWith("target")) {
         let type = id.slice(7, 10);
         let idNr = parseInt(id.slice(11));
-        console.log(type, idNr);
+        console.log("TYPE: ",type, "idNR: ", idNr, "ID: ", id);
 
         // start edit modal with data acquired
         let startItemData = walletCtrl.getItem(type, idNr);
-        console.log(startItemData);
         // Put data into the cells
         document.querySelector(DOM.inputEditDescription).value =
           startItemData.itemData.description;
@@ -601,7 +600,7 @@ var controller = (function(walletCtrl, uIctrl) {
               input.description !== "" &&
               !isNaN(input.value) &&
               input.value > 0
-            ) {
+            ) { idNr = parseInt(id.slice(11));
               walletCtrl.editItem(
                 input.type,
                 idNr,
