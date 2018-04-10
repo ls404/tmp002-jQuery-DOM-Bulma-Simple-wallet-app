@@ -1,5 +1,3 @@
-/* eslint-disable indent,no-console */
-// import * as Chartist from "Chart.bundle.min.js";
 
 $(document).ready(function() {
   $.mobile.changePage("#general");
@@ -8,21 +6,21 @@ $(document).ready(function() {
 
 // data structure
 
-let walletController;
-walletController = (function() {
-  var Expense = function(id, description, value) {
+
+let walletController = (function() {
+  let Expense = function(id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
   };
 
-  var Income = function(id, description, value) {
+  let Income = function(id, description, value) {
     this.id = id;
     this.description = description;
     this.value = value;
   };
 
-  var data = {
+  let data = {
     allItems: {
       exp: [],
       inc: []
@@ -57,15 +55,11 @@ walletController = (function() {
       let ids = data.allItems[type].map(function(current) {
         return current.id;
       });
-        console.log("type", type, "id", id, typeof id, "desc", desc, "val", val);
-        console.log("IDS");
-        console.table(ids);
+
       let index = ids.indexOf(id);
-        console.log("INDEX: ", index);
-      //IMHERE
       if (index !== -1) {
-        data.allItems[type][index]['description'] = desc;
-        data.allItems[type][index]['value'] = val;
+        data.allItems[type][index]["description"] = desc;
+        data.allItems[type][index]["value"] = val;
       }
     },
 
@@ -75,11 +69,9 @@ walletController = (function() {
       });
 
       let index = ids.indexOf(id);
-        console.log(type, id, data.allItems[type][index], "   <<< TO be deleted!!!");
 
-      if ((index !== -1) && (deleteFlag)) {
+      if (index !== -1 && deleteFlag) {
         data.allItems[type].splice(index, 1);
-      console.table(data.allItems);
       }
     },
 
@@ -102,21 +94,17 @@ walletController = (function() {
       let ids = data.allItems[type].map(function(current) {
         return current.id;
       });
-      console.log("available ids: ", ids);
       let index = ids.indexOf(id);
-      console.log("index", index);
       if (index !== -1) {
         return {
           itemData: data.allItems[type][index],
           itemType: type
         };
       } else {
-        console.log(`No such item: type: ${type}, id: ${id}`);
       }
     },
 
     testing: function() {
-      console.table(data);
     }
   };
   // }
@@ -124,7 +112,7 @@ walletController = (function() {
 
 // UI controller
 
-var uIController = (function() {
+let uIController = (function() {
   let DOMstrings = {
     inputDescription: ".exp__add-description",
     inputValue: ".exp__add-value",
@@ -164,7 +152,6 @@ var uIController = (function() {
         value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
       };
     },
-    // TODO DRY ???
     getInputIncome: function(typeLoaded) {
       return {
         type: typeLoaded,
@@ -208,7 +195,6 @@ var uIController = (function() {
       } else if (type === "inc") {
         element = DOMstrings.incomeContainer;
       }
-      console.log(type, element);
 
       document.querySelector(element).insertAdjacentHTML("beforeend", html);
     },
@@ -254,9 +240,9 @@ var uIController = (function() {
       //first chart is deleted to avoid duplicates
       document.getElementById("chart-main").innerHTML =
         '<canvas id="myChart"></canvas>';
-      var ctx = document.getElementById("myChart").getContext("2d");
+      let ctx = document.getElementById("myChart").getContext("2d");
 
-      var data = {
+      let data = {
         labels: ["Income", "Expenses"],
         datasets: [
           {
@@ -275,7 +261,7 @@ var uIController = (function() {
         ]
       };
 
-      var myChart = new Chart(ctx, {
+      let myChart = new Chart(ctx, {
         type: "doughnut",
         data: data,
         options: {
@@ -333,7 +319,7 @@ var uIController = (function() {
 : walletCtrl = walletController (Model)
 : uIctrl = uIController (View)
  */
-var controller = (function(walletCtrl, uIctrl) {
+let controller = (function(walletCtrl, uIctrl) {
   $(document).on("swipeleft", ".ui-page", function(event) {
     if (event.handled !== true) {
       // This will prevent event triggering more then once
@@ -376,7 +362,7 @@ var controller = (function(walletCtrl, uIctrl) {
   });
 
   var setupEventListeners = function() {
-    var input;
+    let input;
     let DOM = uIctrl.getDOMstrings();
 
     let closeModalBtns = document.querySelectorAll(DOM.btnModalCloseAddExpense);
@@ -403,17 +389,12 @@ var controller = (function(walletCtrl, uIctrl) {
 
     var updateWalletTotals = function() {
       // 4. Calculate the Wallet
-        console.log("CALCULATE TOTAL!!!");
-      console.log(walletController.testing());
       walletCtrl.calculateTotal("exp");
       walletCtrl.calculateTotal("inc");
-
-
 
       // 5. Display the budget on UI
 
       let wallet = walletCtrl.getTotals();
-      console.log(">>>>>", wallet);
       uIctrl.displayTotals(wallet);
     };
     // It is used only for expense b
@@ -432,12 +413,8 @@ var controller = (function(walletCtrl, uIctrl) {
         .addEventListener("click", function() {
           input = uIctrl.getInput("exp");
           // 2. Add the item to the budget controller
-          console.log(
-            document
-              .querySelector(DOM.modalAddExpense)
-              .classList.contains("is-active")
-          );
-          // TODO - done solution for a strange repetitions
+
+          // for multiple eventListeners
           if (
             document
               .querySelector(DOM.modalAddExpense)
@@ -477,12 +454,8 @@ var controller = (function(walletCtrl, uIctrl) {
         .addEventListener("click", function() {
           input = uIctrl.getInputIncome("inc");
           // 2. Add the item to the budget controller
-          console.log(
-            document
-              .querySelector(DOM.modalAddIncome)
-              .classList.contains("is-active")
-          );
-          // TODO - done solution for a repetitions from multiple eventhandlers
+
+          // for a repetitions from multiple evenListeners
           if (
             document
               .querySelector(DOM.modalAddIncome)
@@ -517,9 +490,6 @@ var controller = (function(walletCtrl, uIctrl) {
       .querySelector(DOM.addBtnIncome)
       .addEventListener("click", ctrlAddItemIncome);
 
-    console.log("^^^^^^^^");
-    console.log(document.getElementById("income-container"));
-
     // EDIT MODAL FOR INCOME AND EXPENSES
     let editModal = function(event) {
       let deleteFlag = true;
@@ -528,8 +498,6 @@ var controller = (function(walletCtrl, uIctrl) {
       if (id.startsWith("target")) {
         let type = id.slice(7, 10);
         let idNr = parseInt(id.slice(11));
-        console.log("TYPE: ",type, "idNR: ", idNr, "ID: ", id);
-
         // start edit modal with data acquired
         let startItemData = walletCtrl.getItem(type, idNr);
         // Put data into the cells
@@ -566,7 +534,6 @@ var controller = (function(walletCtrl, uIctrl) {
         document
           .querySelector(DOM.btnEditModalDeleteItem)
           .addEventListener("click", function() {
-            console.log(type, idNr);
             walletCtrl.deleteItem(type, idNr, deleteFlag);
             deleteFlag = false;
             // update totals
@@ -575,24 +542,19 @@ var controller = (function(walletCtrl, uIctrl) {
             uIctrl.displayTotals(wallet);
             // delete list item
             uIctrl.deleteListItem(id);
-            walletController.testing(); //TODO TESTING!!!
             // Close edit modal
             document
               .querySelector(DOM.modalEditItem)
               .classList.remove("is-active");
           });
-        // imhere
+
         document
           .querySelector(DOM.btnEditModalSave)
           .addEventListener("click", function() {
             input = uIctrl.getInputEdit(type);
             // 2. Add the item to the budget controller
-            console.log("CNAKGE>>>",
-              document
-                .querySelector(DOM.modalEditItem)
-                .classList.contains("is-active")
-            );
-            // TODO - done solution for a repetitions from multiple eventhandlers
+
+            // done solution for a repetitions from multiple eventListeners
             if (
               document
                 .querySelector(DOM.modalEditItem)
@@ -600,7 +562,8 @@ var controller = (function(walletCtrl, uIctrl) {
               input.description !== "" &&
               !isNaN(input.value) &&
               input.value > 0
-            ) { idNr = parseInt(id.slice(11));
+            ) {
+              idNr = parseInt(id.slice(11));
               walletCtrl.editItem(
                 input.type,
                 idNr,
@@ -619,30 +582,13 @@ var controller = (function(walletCtrl, uIctrl) {
               .classList.remove("is-active");
           });
 
-        // //TODO Close modal
-        // document
-        //     .querySelector(DOM.modalEditItem)
-        //     .classList.remove("is-active");
       }
-      // start edit modal with data acquired
-      // write modal event listeners (cancel, edit, delete);
 
-      // console.log(type);
     };
 
-    //     document
-    //   .getElementsByClassName(".event-item")
-    //   .addEventListener("click", editModal);
-    // //
 
     $(".lists").on("click", editModal);
-    // document
-    //   .getElementById("income-container")
-    //   .addEventListener("click", editModal);
-    //
-    // document
-    //   .getElementById("expenses-container")
-    //   .addEventListener("click", editModal);
+
 
     //TODO TEST!!! to delete!!!
     // document.addEventListener("keypress", function(ev) {
