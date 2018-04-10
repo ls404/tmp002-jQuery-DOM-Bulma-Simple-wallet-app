@@ -65,33 +65,6 @@ hr.expense {
 
 }
 
-/*Chart starts here
-*/
-
-.chartist {
-    max-width: 640px;
-  margin: 2em auto;
-}
-
-.ct-series-a .ct-slice-donut-solid {
-  /* give the donut slice a custom colour */
-  /* stroke: #4aa73582 !important; */
-  fill: #4aa73582 !important;
-  /* customize stroke width of the donut slices in CSS. Note that this property is already set in JavaScript and label positioning also relies on this. In the right situation though it can be very useful to style this property. You need to use !important to override the style attribute */
-  stroke-width: 5px !important;
-  /* create modern looking rounded donut charts */
-  stroke-linecap: round;
-}
-
-.ct-series-b .ct-slice-donut-solid {
-  /* give the donut slice a custom colour */
-  /* stroke: #ff00ff6e !important; */
-  fill: #f89b9b !important;
-  /* customize stroke width of the donut slices in CSS. Note that this property is already set in JavaScript and label positioning also relies on this. In the right situation though it can be very useful to style this property. You need to use !important to override the style attribute */
-  stroke-width: 5px !important;
-  /* create modern looking rounded donut charts */
-  stroke-linecap: round;
-}
 
 /* Rules for tabular pages (income and expenses) */
 
@@ -101,7 +74,11 @@ background-color: #9afbc8;
 
 #expenses {
   background-color: #f89b9b;
-  padding: 1em;
+
+}
+
+.items-container {
+  margin-top: 55px;
 }
 
 /*Cards...*/

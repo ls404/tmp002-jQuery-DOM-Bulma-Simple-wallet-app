@@ -9,21 +9,27 @@
     <link rel="icon" href="images/piggybank-32-16830.png">
     <link rel="stylesheet" href="css/bulma.css">
     <link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
-    <link rel="stylesheet" href="css/chartist.min.css">
+    <!--<link rel="stylesheet" href="css/chartist.min.css">-->
     <link rel="stylesheet" href="css/index.css">
 
     <!--<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>-->
     <!--<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>-->
     <script src="js/jquery-1.11.1.min.js"></script>
     <script src="js/jquery.mobile-1.4.5.js"></script>
-    <script src="js/chartist.min.js"></script>
+    <!--<script src="js/chartist.min.js"></script>-->
     <script src="js/Chart.bundle.min.js"></script>
 </head>
 <body>
 <!--Income page-->
 <div data-role="page" id="income">
-
     <div data-role="content">
+        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand is-centered has-text-centered" style="text-align: center">
+                <div class="container has-text-centered is-size-2 has-text-grey">
+                    Income
+                </div>
+            </div>
+        </nav>
 
         <p class="container btn_btm-right">
 
@@ -34,7 +40,7 @@
 
         </p>
 
-        <div class="container">
+        <div class="container items-container">
             <div class="columns is-multiline is-centered income__list">
                 <!--<div class="column box margin-l-r is-4-tablet">-->
                 <!--<table class="table is-fullwidth">-->
@@ -55,11 +61,11 @@
         <div class="hero-body  has-text-centered" id="piggy-placeholder">
 
             <div class="container">
-                            <div id="loader-wrapper">
-  <div id="loader"></div>
-  <div class="loader-section section-left"></div>
-  <div class="loader-section section-right"></div>
-</div>
+                <div id="loader-wrapper">
+                    <div id="loader"></div>
+                    <div class="loader-section section-left"></div>
+                    <div class="loader-section section-right"></div>
+                </div>
                 <h1 class="subtitle">
                     Total balance
                 </h1>
@@ -85,16 +91,23 @@
         </div>
     </div>
     <div class="container-chart" style="width:80%; margin: 15px auto;">
-    <canvas id="myChart"></canvas>
-  </div>
+        <canvas id="myChart"></canvas>
+    </div>
     <!--<div class="chartist" style="width:40%; margin: 15px auto;>-->
-        <!--<div class="ct-chart ct-perfect-fourth"></div>-->
+    <!--<div class="ct-chart ct-perfect-fourth"></div>-->
     <!--</div>-->
 </div>
 
 <!--Expenses page-->
 <div data-role="page" id="expenses">
     <div data-role="content">
+        <nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand is-centered has-text-centered" style="text-align: center">
+                <div class="container has-text-centered is-size-2 has-text-grey">
+                    Expenses
+                </div>
+            </div>
+        </nav>
         <p class="container btn_btm-right">
 
             <a class="add__btn-expenses button is-rounded is-medium is-primary">
@@ -103,19 +116,19 @@
 
         </p>
 
-        <iv class="container">
+        <div class="container items-container">
             <div class="columns is-multiline is-centered expenses__list">
                 <!--<div class="column box margin-l-r is-4-tablet">-->
-                    <!--<table class="table is-fullwidth">-->
-                        <!--<tr class="">-->
-                            <!--<td class="">Addled, misty cannibals unlawfully love a proud, scurvy wave.</td>-->
-                            <!--<td class="value"><span class="tag">4568.35</span></td>-->
-                        <!--</tr>-->
-                    <!--</table>-->
+                <!--<table class="table is-fullwidth">-->
+                <!--<tr class="">-->
+                <!--<td class="">Addled, misty cannibals unlawfully love a proud, scurvy wave.</td>-->
+                <!--<td class="value"><span class="tag">4568.35</span></td>-->
+                <!--</tr>-->
+                <!--</table>-->
                 <!--</div>-->
 
             </div>
-        </iv>
+        </div>
     </div>
 </div>
 
