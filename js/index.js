@@ -6,40 +6,7 @@ $(document).ready(function() {
 });
 // let walletType; // No need for global variable
 
-$(document).on("swipeleft", ".ui-page", function(event) {
-  if (event.handled !== true) {
-    // This will prevent event triggering more then once
-    var nextpage = $.mobile.activePage.next('[data-role="page"]');
-    // swipe using id of next page if exists
-    if (nextpage.length > 0) {
-      $.mobile.changePage(
-        nextpage,
-        { transition: "slide", reverse: false },
-        true,
-        true
-      );
-    }
-    event.handled = true;
-  }
-  return false;
-});
 
-$(document).on("swiperight", ".ui-page", function(event) {
-  if (event.handled !== true) {
-    // This will prevent event triggering more then once
-    var prevpage = $(this).prev('[data-role="page"]');
-    if (prevpage.length > 0) {
-      $.mobile.changePage(
-        prevpage,
-        { transition: "slide", reverse: true },
-        true,
-        true
-      );
-    }
-    event.handled = true;
-  }
-  return false;
-});
 
 // data structure
 
@@ -313,6 +280,45 @@ TODO>: walletCtrl = walletController (Model)
 TODO>: uIctrl = uIController (View)
  */
 var controller = (function(walletCtrl, uIctrl) {
+    $(document).on("swipeleft", ".ui-page", function(event) {
+  if (event.handled !== true) {
+    // This will prevent event triggering more then once
+    var nextpage = $.mobile.activePage.next('[data-role="page"]');
+    // swipe using id of next page if exists
+    if (nextpage.length > 0) {
+      $.mobile.changePage(
+        nextpage,
+        { transition: "slide", reverse: false },
+        true,
+        true
+      );
+    }
+    event.handled = true;
+  };
+  let wallet = walletCtrl.getTotals();
+  uIctrl.displayTotals(wallet);
+  return false;
+});
+
+$(document).on("swiperight", ".ui-page", function(event) {
+  if (event.handled !== true) {
+    // This will prevent event triggering more then once
+    var prevpage = $(this).prev('[data-role="page"]');
+    if (prevpage.length > 0) {
+      $.mobile.changePage(
+        prevpage,
+        { transition: "slide", reverse: true },
+        true,
+        true
+      );
+    }
+    event.handled = true;
+  }
+    let wallet = walletCtrl.getTotals();
+  uIctrl.displayTotals(wallet);
+  return false;
+});
+
   var setupEventListeners = function() {
     var input;
     let DOM = uIctrl.getDOMstrings();
