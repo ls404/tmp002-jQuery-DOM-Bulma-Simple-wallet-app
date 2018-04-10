@@ -8,7 +8,8 @@ $(document).ready(function() {
 
 // data structure
 
-let walletController = (function() {
+let walletController;
+walletController = (function() {
   var Expense = function(id, description, value) {
     this.id = id;
     this.description = description;
@@ -52,6 +53,18 @@ let walletController = (function() {
       return newItem;
     },
 
+    deleteItem: function(type, id) {
+      let ids = data.allItems[type].map(function(current) {
+        return current.id;
+      });
+
+      let index = ids.indexOf(id);
+
+      if (index !== -1) {
+        data.allItems[type].splice(index, 1);
+      }
+    },
+
     calculateTotal: function(type) {
       let sum = 0;
       data.allItems[type].forEach(function(curr) {
@@ -67,8 +80,25 @@ let walletController = (function() {
       };
     },
 
+    getItem: function(type, id) {
+      let ids = data.allItems[type].map(function(current) {
+        return current.id;
+      });
+        console.log("available ids: ", ids);
+      let index = ids.indexOf(id);
+        console.log("index", index);
+      if (index !== -1) {
+        return {
+          itemData: data.allItems[type][index],
+          itemType: type
+        };
+      } else {
+        console.log(`No such item: type: ${type}, id: ${id}`);
+      }
+    },
+
     testing: function() {
-      console.log(data);
+      console.table(data);
     }
   };
   // }
@@ -94,7 +124,18 @@ var uIController = (function() {
     expensesContainer: ".expenses__list",
     totalWalletFront: "#total",
     buttonValueIncome: "#button-value-income",
-    buttonValueExpenses: "#button-value-expenses"
+    buttonValueExpenses: "#button-value-expenses",
+
+    // Edit modal \/\/\/\/\/
+
+    itemsLists: ".lists",
+    modalEditItem: "#edit-modal",
+    btnEditModalSave: ".save-edit-modal",
+    btnEditModalClose: ".close-edit-modal",
+    btnEditModalDeleteItem: ".delete-edit-modal",
+    inputEditDescription: ".edit__description",
+    inputEditValue: ".edit__value",
+    editModalTitle: "#edit-modal-card-title"
   };
 
   return {
@@ -105,7 +146,7 @@ var uIController = (function() {
         value: parseFloat(document.querySelector(DOMstrings.inputValue).value)
       };
     },
-
+    // TODO DRY ???
     getInputIncome: function(typeLoaded) {
       return {
         type: typeLoaded,
@@ -116,19 +157,18 @@ var uIController = (function() {
         )
       };
     },
+
     //Create HTML string with placeholder tag for adding items
     addListItem: function(obj, type) {
       let html, element;
-
-      html = `<div class="column box margin-l-r is-4-tablet" id="${type}"-${
-        obj.id
-      }> 
+      let id = `"target-${type}-${obj.id}"`;
+      html = `<div class="column box margin-l-r is-4-tablet event-item" id=${id}> 
                     <table class="table is-fullwidth"> 
                         <tr class=""> 
-                            <td class="">${obj.description}</td>
-                            <td class="value"><span class="tag is-medium">${
-                              obj.value
-                            }</span></td>
+                            <td class="" id=${id}>${obj.description}</td>
+                            <td class="value" id=${id}><span class="tag is-medium" id=${id}>${
+        obj.value
+      }</span></td>
                         </tr>
                     </table>
                 </div>`;
@@ -144,8 +184,18 @@ var uIController = (function() {
       document.querySelector(element).insertAdjacentHTML("beforeend", html);
     },
 
-    clearFields: function() {
+    deleteListItem: function(selectorID) {
+      if (document
+        .querySelector(`#${selectorID}.event-item`)) {
 
+        document
+        .querySelector(`#${selectorID}.event-item`)
+        .parentNode.removeChild(
+          document.querySelector(`#${selectorID}.event-item`)
+        );};
+    },
+
+    clearFields: function() {
       document.querySelector(DOMstrings.inputValue).value = "";
       document.querySelector(DOMstrings.inputDescription).value = "";
       document.querySelector(DOMstrings.inputValueInc).value = "";
@@ -162,12 +212,13 @@ var uIController = (function() {
     },
     /*
 
-      /*
-      Chart.js starts here
-       */
+          /*
+          Chart.js starts here
+           */
     refreshChart: function(obj) {
       //first chart is deleted to avoid duplicates
-      document.getElementById("chart-main").innerHTML = "<canvas id=\"myChart\"></canvas>";
+      document.getElementById("chart-main").innerHTML =
+        '<canvas id="myChart"></canvas>';
       var ctx = document.getElementById("myChart").getContext("2d");
 
       var data = {
@@ -427,6 +478,97 @@ var controller = (function(walletCtrl, uIctrl) {
     document
       .querySelector(DOM.addBtnIncome)
       .addEventListener("click", ctrlAddItemIncome);
+
+    console.log("^^^^^^^^");
+    console.log(document.getElementById("income-container"));
+
+    //IMHERE  !!!
+    let editModal = function(event) {
+      console.log("edit modal is starting!!!:");
+      console.log(event);
+      console.log(event.toElement.id);
+      id = event.toElement.id;
+      //extract exp or inc + id number
+      if (id.startsWith("target")) {
+        let type = id.slice(7, 10);
+        let idNr = parseInt(id.slice(11));
+        console.log(type, idNr);
+
+        // start edit modal with data acquired
+        let startItemData = walletCtrl.getItem(type, idNr);
+        console.log(startItemData);
+        // Put data into the cells
+        document.querySelector(DOM.inputEditDescription).value =
+          startItemData.itemData.description;
+        document.querySelector(DOM.inputEditValue).value =
+          startItemData.itemData.value;
+
+        // Set Edit modal header ot Expense or Income
+        type === "inc"
+          ? (document.querySelector(DOM.editModalTitle).innerHTML = "Income")
+          : (document.querySelector(DOM.editModalTitle).innerHTML = "Expense");
+        // Set close edit modal event listeners on 3 possible buttons
+        let closeEditModalBtns = document.querySelectorAll(
+          DOM.btnEditModalClose
+        );
+
+        for (let i of closeEditModalBtns) {
+          i.addEventListener("click", function() {
+            document
+              .querySelector(DOM.modalEditItem)
+              .classList.remove("is-active");
+          });
+        }
+
+        document.querySelector(
+          DOM.inputDescription
+        ).Value = document.querySelector(
+          // Open edit modal
+          DOM.modalEditItem
+        ).className +=
+          " is-active";
+
+        document
+          .querySelector(DOM.btnEditModalDeleteItem)
+          .addEventListener("click", function() {
+            console.log(type, idNr);
+            walletCtrl.deleteItem(type, idNr);
+            // update totals
+            walletCtrl.calculateTotal(type);
+            let wallet = walletCtrl.getTotals();
+            uIctrl.displayTotals(wallet);
+            // delete list item
+            uIctrl.deleteListItem(id);
+            // Close edit modal
+            document
+              .querySelector(DOM.modalEditItem)
+              .classList.remove("is-active");
+          });
+
+        // //TODO Close modal
+        // document
+        //     .querySelector(DOM.modalEditItem)
+        //     .classList.remove("is-active");
+      }
+      // start edit modal with data acquired
+      // write modal event listeners (cancel, edit, delete);
+
+      // console.log(type);
+    };
+
+    //     document
+    //   .getElementsByClassName(".event-item")
+    //   .addEventListener("click", editModal);
+    // //
+
+    $(".lists").on("click", editModal);
+    // document
+    //   .getElementById("income-container")
+    //   .addEventListener("click", editModal);
+    //
+    // document
+    //   .getElementById("expenses-container")
+    //   .addEventListener("click", editModal);
 
     //TODO TEST!!! to delete!!!
     // document.addEventListener("keypress", function(ev) {

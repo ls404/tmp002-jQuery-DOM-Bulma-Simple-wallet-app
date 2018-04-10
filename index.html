@@ -43,7 +43,7 @@
         </p>
 
         <div class="container items-container">
-            <div class="columns is-multiline is-centered income__list">
+            <div id="income-container" class="columns is-multiline is-centered income__list lists">
                 <!--<div class="column box margin-l-r is-4-tablet">-->
                 <!--<table class="table is-fullwidth">-->
                 <!--<tr class="">-->
@@ -52,7 +52,7 @@
                 <!--</tr>-->
                 <!--</table>-->
                 <!--</div>-->
-
+                <div></div>
             </div>
         </div>
     </div>
@@ -119,7 +119,7 @@
         </p>
 
         <div class="container items-container">
-            <div class="columns is-multiline is-centered expenses__list">
+            <div id="expenses-container" class="columns is-multiline is-centered expenses__list lists">
                 <!--<div class="column box margin-l-r is-4-tablet">-->
                 <!--<table class="table is-fullwidth">-->
                 <!--<tr class="">-->
@@ -128,7 +128,7 @@
                 <!--</tr>-->
                 <!--</table>-->
                 <!--</div>-->
-
+                <div></div>
             </div>
         </div>
     </div>
@@ -202,6 +202,41 @@
     </div>
 
     <button class="close-modal-add-incomeadd__btn_income modal-close is-large" aria-label="close"></button>
+</div>
+
+<div id="edit-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title" id="edit-modal-card-title">Income</p>
+            <button class="close-edit-modal delete" aria-label="close"></button>
+        </header>
+        <section class="modal-card-body">
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <input class="input edit__description" type="text" placeholder="e.g. Discovered treasure"
+                           value="">
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Amount</label>
+                <div class="control">
+                    <input class="input edit__value" type="text" placeholder="e.g. 999.99 (dot only!)" value=""
+                           onkeypress="return numbersOnly(this, event);">
+                </div>
+            </div>
+
+
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button save-edit-modal is-primary">Save</button>
+            <button class="button close-edit-modal">Cancel</button>
+            <button class="button delete-edit-modal is-danger">Delete</button>
+        </footer>
+    </div>
+
+    <button class="close-edit-modal add__btn_income modal-close is-large" aria-label="close"></button>
 </div>
 
 <script src="js/index.js"></script>
