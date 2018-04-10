@@ -53,15 +53,30 @@ walletController = (function() {
       return newItem;
     },
 
-    deleteItem: function(type, id) {
+    editItem: function(type, id, desc, val) {
       let ids = data.allItems[type].map(function(current) {
         return current.id;
       });
 
       let index = ids.indexOf(id);
-
+      //IMHERE
       if (index !== -1) {
+        data.allItems[type][index]['description'] = desc;
+        data.allItems[type][index]['value'] = val;
+      }
+    },
+
+    deleteItem: function(type, id, deleteFlag) {
+      let ids = data.allItems[type].map(function(current) {
+        return current.id;
+      });
+
+      let index = ids.indexOf(id);
+        console.log(type, id, data.allItems[type][index], "   <<< TO be deleted!!!");
+
+      if ((index !== -1) && (deleteFlag)) {
         data.allItems[type].splice(index, 1);
+      console.table(data.allItems);
       }
     },
 
@@ -84,9 +99,9 @@ walletController = (function() {
       let ids = data.allItems[type].map(function(current) {
         return current.id;
       });
-        console.log("available ids: ", ids);
+      console.log("available ids: ", ids);
       let index = ids.indexOf(id);
-        console.log("index", index);
+      console.log("index", index);
       if (index !== -1) {
         return {
           itemData: data.allItems[type][index],
@@ -158,6 +173,17 @@ var uIController = (function() {
       };
     },
 
+    getInputEdit: function(typeLoaded) {
+      return {
+        type: typeLoaded,
+        description: document.querySelector(DOMstrings.inputEditDescription)
+          .value,
+        value: parseFloat(
+          document.querySelector(DOMstrings.inputEditValue).value
+        )
+      };
+    },
+
     //Create HTML string with placeholder tag for adding items
     addListItem: function(obj, type) {
       let html, element;
@@ -165,8 +191,8 @@ var uIController = (function() {
       html = `<div class="column box margin-l-r is-4-tablet event-item" id=${id}> 
                     <table class="table is-fullwidth"> 
                         <tr class=""> 
-                            <td class="" id=${id}>${obj.description}</td>
-                            <td class="value" id=${id}><span class="tag is-medium" id=${id}>${
+                            <td class="desc" id=${id}>${obj.description}</td>
+                            <td class="value val" id=${id}><span class="tag is-medium" id=${id}>${
         obj.value
       }</span></td>
                         </tr>
@@ -174,9 +200,9 @@ var uIController = (function() {
                 </div>`;
 
       // Insert HTML into the DOM
-      if (type == "exp") {
+      if (type === "exp") {
         element = DOMstrings.expensesContainer;
-      } else if (type == "inc") {
+      } else if (type === "inc") {
         element = DOMstrings.incomeContainer;
       }
       console.log(type, element);
@@ -184,15 +210,19 @@ var uIController = (function() {
       document.querySelector(element).insertAdjacentHTML("beforeend", html);
     },
 
-    deleteListItem: function(selectorID) {
-      if (document
-        .querySelector(`#${selectorID}.event-item`)) {
+    updateListItem: function(id, desc, value) {
+      document.querySelector(`#${id}.desc`).innerHTML = desc;
+      document.querySelector(`#${id}.tag`).innerHTML = value;
+    },
 
+    deleteListItem: function(selectorID) {
+      if (document.querySelector(`#${selectorID}.event-item`)) {
         document
-        .querySelector(`#${selectorID}.event-item`)
-        .parentNode.removeChild(
-          document.querySelector(`#${selectorID}.event-item`)
-        );};
+          .querySelector(`#${selectorID}.event-item`)
+          .parentNode.removeChild(
+            document.querySelector(`#${selectorID}.event-item`)
+          );
+      }
     },
 
     clearFields: function() {
@@ -200,6 +230,8 @@ var uIController = (function() {
       document.querySelector(DOMstrings.inputDescription).value = "";
       document.querySelector(DOMstrings.inputValueInc).value = "";
       document.querySelector(DOMstrings.inputDescriptionInc).value = "";
+      document.querySelector(DOMstrings.inputEditValue).value = "";
+      document.querySelector(DOMstrings.inputEditDescription).value = "";
     },
 
     displayTotals: function(obj) {
@@ -212,9 +244,9 @@ var uIController = (function() {
     },
     /*
 
-          /*
-          Chart.js starts here
-           */
+              /*
+              Chart.js starts here
+               */
     refreshChart: function(obj) {
       //first chart is deleted to avoid duplicates
       document.getElementById("chart-main").innerHTML =
@@ -366,11 +398,14 @@ var controller = (function(walletCtrl, uIctrl) {
       });
     }
 
-    var updateBudget = function() {
+    var updateWalletTotals = function() {
       // 4. Calculate the Wallet
+        console.log("CALCULATE TOTAL!!!");
+      console.log(walletController.testing());
       walletCtrl.calculateTotal("exp");
       walletCtrl.calculateTotal("inc");
-      console.log(walletController.testing());
+
+
 
       // 5. Display the budget on UI
 
@@ -416,7 +451,7 @@ var controller = (function(walletCtrl, uIctrl) {
             // 3. Add the item to the UI
             uIctrl.addListItem(newItem, "exp");
             uIctrl.clearFields();
-            updateBudget();
+            updateWalletTotals();
           }
           // closes the expense entry modal
           document
@@ -444,7 +479,7 @@ var controller = (function(walletCtrl, uIctrl) {
               .querySelector(DOM.modalAddIncome)
               .classList.contains("is-active")
           );
-          // TODO - done solution for a strange repetitions
+          // TODO - done solution for a repetitions from multiple eventhandlers
           if (
             document
               .querySelector(DOM.modalAddIncome)
@@ -461,7 +496,7 @@ var controller = (function(walletCtrl, uIctrl) {
             // 3. Add the item to the UI
             uIctrl.addListItem(newItem, "inc");
             uIctrl.clearFields();
-            updateBudget();
+            updateWalletTotals();
           }
           // closes the expense entry modal
           document
@@ -482,8 +517,9 @@ var controller = (function(walletCtrl, uIctrl) {
     console.log("^^^^^^^^");
     console.log(document.getElementById("income-container"));
 
-    //IMHERE  !!!
+    // EDIT MODAL FOR INCOME AND EXPENSES
     let editModal = function(event) {
+      let deleteFlag = true;
       console.log("edit modal is starting!!!:");
       console.log(event);
       console.log(event.toElement.id);
@@ -532,14 +568,53 @@ var controller = (function(walletCtrl, uIctrl) {
           .querySelector(DOM.btnEditModalDeleteItem)
           .addEventListener("click", function() {
             console.log(type, idNr);
-            walletCtrl.deleteItem(type, idNr);
+            walletCtrl.deleteItem(type, idNr, deleteFlag);
+            deleteFlag = false;
             // update totals
             walletCtrl.calculateTotal(type);
             let wallet = walletCtrl.getTotals();
             uIctrl.displayTotals(wallet);
             // delete list item
             uIctrl.deleteListItem(id);
+            walletController.testing(); //TODO TESTING!!!
             // Close edit modal
+            document
+              .querySelector(DOM.modalEditItem)
+              .classList.remove("is-active");
+          });
+        // imhere
+        document
+          .querySelector(DOM.btnEditModalSave)
+          .addEventListener("click", function() {
+            input = uIctrl.getInputEdit(type);
+            // 2. Add the item to the budget controller
+            console.log("CNAKGE>>>",
+              document
+                .querySelector(DOM.modalEditItem)
+                .classList.contains("is-active")
+            );
+            // TODO - done solution for a repetitions from multiple eventhandlers
+            if (
+              document
+                .querySelector(DOM.modalEditItem)
+                .classList.contains("is-active") &&
+              input.description !== "" &&
+              !isNaN(input.value) &&
+              input.value > 0
+            ) {
+              walletCtrl.editItem(
+                input.type,
+                idNr,
+                input.description,
+                input.value
+              );
+              // 3. Add the item to the UIqweqweqwecompiz --replace
+
+              uIctrl.updateListItem(id, input.description, input.value);
+              uIctrl.clearFields();
+              updateWalletTotals();
+            }
+            // closes the expense entry modal
             document
               .querySelector(DOM.modalEditItem)
               .classList.remove("is-active");
