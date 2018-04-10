@@ -145,7 +145,7 @@ var uIController = (function() {
     },
 
     clearFields: function() {
-      
+
       document.querySelector(DOMstrings.inputValue).value = "";
       document.querySelector(DOMstrings.inputDescription).value = "";
       document.querySelector(DOMstrings.inputValueInc).value = "";
