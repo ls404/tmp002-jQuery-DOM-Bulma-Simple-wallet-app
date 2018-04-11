@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $.mobile.changePage("#general");
 });
-// let walletType; // No need for global variable
 
 // data structure
 
@@ -50,7 +49,6 @@ let walletController = (function () {
         },
 
         editItem: function (type, id, desc, val) {
-            console.log("EditItem data:", type, id, desc, val);
             let ids = data.allItems[type].map(function (current) {
                 return current.id;
             });
@@ -200,13 +198,11 @@ let uIController = (function () {
         },
 
         updateListItem: function (id, desc, value) {
-            console.log("Updating list item", id, desc, value);
             document.querySelector(`#${id}.desc`).innerHTML = desc;
             document.querySelector(`#${id}.tag`).innerHTML = value;
         },
 
         deleteListItem: function (selectorID) {
-            console.log("deleteListItem:", selectorID);
             if (document.querySelector(`#${selectorID}.event-item`)) {
                 document
                   .querySelector(`#${selectorID}.event-item`)
@@ -227,11 +223,11 @@ let uIController = (function () {
 
         displayTotals: function (obj) {
             document.querySelector(DOMstrings.totalWalletFront).textContent =
-              obj.totalIncome - obj.totalExpenses;
+              (obj.totalIncome - obj.totalExpenses).toFixed(2);
             document.querySelector(DOMstrings.buttonValueIncome).textContent =
-              obj.totalIncome;
+              (obj.totalIncome).toFixed(2);
             document.querySelector(DOMstrings.buttonValueExpenses).textContent =
-              obj.totalExpenses;
+              (obj.totalExpenses).toFixed(2);
         },
         /*
 
@@ -250,12 +246,7 @@ let uIController = (function () {
                     {
                         backgroundColor: [
                             "#2ecc71",
-                            // "#3498db",
-                            // "#95a5a6",
-                            // "#9b59b6",
-                            // "#f1c40f",
                             "#e74c3c"
-                            // "#34495e"
                         ],
                         data: [obj.totalIncome, obj.totalExpenses],
                         hashid: ["a1", "a2"]
@@ -496,7 +487,6 @@ let controller = (function (walletCtrl, uIctrl) {
         let editModal = function (event) {
             let deleteFlag = true;
             const id = event.toElement.id;
-            console.log("ID: ", id);
             //extract exp or inc + id number
             if (id.startsWith("target")) {
                 let type = id.slice(7, 10);
@@ -535,7 +525,6 @@ let controller = (function (walletCtrl, uIctrl) {
                         });
                     }
                 };
-                // imhere
                 // Set close edit modal event listeners on 3 possible buttons
                 let closeEditModalBtns = document.querySelectorAll(
                   DOM.btnEditModalClose
@@ -568,7 +557,6 @@ let controller = (function (walletCtrl, uIctrl) {
 
                 // Delete item function and listener (multiple listeners solved)
                 var deletingEditModal = function () {
-                    console.log("Deleting item data:", type, idNr, deleteFlag);
                     walletCtrl.deleteItem(type, idNr, deleteFlag);
                     deleteFlag = false;
                     // update totals
@@ -576,21 +564,13 @@ let controller = (function (walletCtrl, uIctrl) {
                     let wallet = walletCtrl.getTotals();
                     uIctrl.displayTotals(wallet);
                     // delete list item
-                    console.log("Delete list item", id);
                     uIctrl.deleteListItem(id);
                     // Close edit modal
                     clearEventListenersOnClose();
                     document
                       .querySelector(DOM.modalEditItem)
                       .classList.remove("is-active");
-                    // document
-                    //   .querySelector(DOM.btnEditModalDeleteItem)
-                    //   .removeEventListener("click", deletingEditModal);
-                    // document
-                    //   .querySelector(DOM.btnEditModalSave)
-                    //   .removeEventListener("click", savingEditModal);
                 };
-                console.log("Delete listener removed");
                 document
                   .querySelector(DOM.btnEditModalDeleteItem)
                   .addEventListener("click", deletingEditModal);
@@ -617,7 +597,7 @@ let controller = (function (walletCtrl, uIctrl) {
                           input.description,
                           input.value
                         );
-                        // 3. Add the item to the UIqweqweqwecompiz --replace
+                        // 3. Add the item to the UI
 
                         uIctrl.updateListItem(id, input.description, input.value);
                         uIctrl.clearFields();
@@ -653,8 +633,6 @@ let controller = (function (walletCtrl, uIctrl) {
     return {
         init: function () {
             console.log("Application has started! Init in controller!");
-            // uIctrl.displayTotals({totalIncome: 0,
-            //   totalExpenses: 0});
             setupEventListeners();
         }
     };
