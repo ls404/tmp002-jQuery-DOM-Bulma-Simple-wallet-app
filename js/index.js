@@ -1,11 +1,9 @@
-
 $(document).ready(function() {
   $.mobile.changePage("#general");
 });
 // let walletType; // No need for global variable
 
 // data structure
-
 
 let walletController = (function() {
   let Expense = function(id, description, value) {
@@ -52,6 +50,7 @@ let walletController = (function() {
     },
 
     editItem: function(type, id, desc, val) {
+      console.log("EditItem data:", type, id, desc, val);
       let ids = data.allItems[type].map(function(current) {
         return current.id;
       });
@@ -105,6 +104,7 @@ let walletController = (function() {
     },
 
     testing: function() {
+      console.table(data.allItems);
     }
   };
   // }
@@ -200,11 +200,13 @@ let uIController = (function() {
     },
 
     updateListItem: function(id, desc, value) {
+      console.log("Updating list item", id, desc, value);
       document.querySelector(`#${id}.desc`).innerHTML = desc;
       document.querySelector(`#${id}.tag`).innerHTML = value;
     },
 
     deleteListItem: function(selectorID) {
+      console.log("deleteListItem:", selectorID);
       if (document.querySelector(`#${selectorID}.event-item`)) {
         document
           .querySelector(`#${selectorID}.event-item`)
@@ -493,7 +495,8 @@ let controller = (function(walletCtrl, uIctrl) {
     // EDIT MODAL FOR INCOME AND EXPENSES
     let editModal = function(event) {
       let deleteFlag = true;
-      id = event.toElement.id;
+      const id = event.toElement.id;
+      console.log("ID: ", id);
       //extract exp or inc + id number
       if (id.startsWith("target")) {
         let type = id.slice(7, 10);
@@ -510,18 +513,45 @@ let controller = (function(walletCtrl, uIctrl) {
         type === "inc"
           ? (document.querySelector(DOM.editModalTitle).innerHTML = "Income")
           : (document.querySelector(DOM.editModalTitle).innerHTML = "Expense");
+
+                //imhere
+        let clearEventListenersOnClose = function() {
+          console.log("CLEARRRRRRRR....");
+          document
+            .querySelector(DOM.btnEditModalDeleteItem)
+            .removeEventListener("click", deletingEditModal);
+          document
+            .querySelector(DOM.btnEditModalSave)
+            .addEventListener("click", savingEditModal);
+          let closeEditModalBtns = document.querySelectorAll(
+            DOM.btnEditModalClose
+          );
+
+          for (let i of closeEditModalBtns) {
+            i.removeEventListener("click", function() {
+              document
+                .querySelector(DOM.modalEditItem)
+                .classList.remove("is-active");
+            });
+          }
+        };
+
         // Set close edit modal event listeners on 3 possible buttons
         let closeEditModalBtns = document.querySelectorAll(
           DOM.btnEditModalClose
         );
+
 
         for (let i of closeEditModalBtns) {
           i.addEventListener("click", function() {
             document
               .querySelector(DOM.modalEditItem)
               .classList.remove("is-active");
+            clearEventListenersOnClose();
           });
         }
+
+
 
         document.querySelector(
           DOM.inputDescription
@@ -531,64 +561,78 @@ let controller = (function(walletCtrl, uIctrl) {
         ).className +=
           " is-active";
 
+        // Delete item function and listener (multiple listeners solved)
+        var deletingEditModal = function() {
+          console.log("Deleting item data:", type, idNr, deleteFlag);
+          walletCtrl.deleteItem(type, idNr, deleteFlag);
+          deleteFlag = false;
+          // update totals
+          walletCtrl.calculateTotal(type);
+          let wallet = walletCtrl.getTotals();
+          uIctrl.displayTotals(wallet);
+          // delete list item
+          console.log("Delete list item", id);
+          uIctrl.deleteListItem(id);
+          // Close edit modal
+          clearEventListenersOnClose();
+          document
+            .querySelector(DOM.modalEditItem)
+            .classList.remove("is-active");
+          document
+            .querySelector(DOM.btnEditModalDeleteItem)
+            .removeEventListener("click", deletingEditModal);
+        };
+        console.log("Delete listener removed");
         document
           .querySelector(DOM.btnEditModalDeleteItem)
-          .addEventListener("click", function() {
-            walletCtrl.deleteItem(type, idNr, deleteFlag);
-            deleteFlag = false;
-            // update totals
-            walletCtrl.calculateTotal(type);
-            let wallet = walletCtrl.getTotals();
-            uIctrl.displayTotals(wallet);
-            // delete list item
-            uIctrl.deleteListItem(id);
-            // Close edit modal
+          .addEventListener("click", deletingEditModal);
+
+        //Save changes
+
+        var savingEditModal = function() {
+          input = uIctrl.getInputEdit(type);
+          // 2. Add the item to the budget controller
+
+          // done solution for a repetitions from multiple eventListeners
+          if (
             document
               .querySelector(DOM.modalEditItem)
-              .classList.remove("is-active");
-          });
+              .classList.contains("is-active") &&
+            input.description !== "" &&
+            !isNaN(input.value) &&
+            input.value > 0
+          ) {
+            idNr = parseInt(id.slice(11));
+            walletCtrl.editItem(
+              input.type,
+              idNr,
+              input.description,
+              input.value
+            );
+            // 3. Add the item to the UIqweqweqwecompiz --replace
+
+            uIctrl.updateListItem(id, input.description, input.value);
+            uIctrl.clearFields();
+            updateWalletTotals();
+          }
+          // closes the expense entry modal
+          clearEventListenersOnClose();
+          document
+            .querySelector(DOM.modalEditItem)
+            .classList.remove("is-active");
+        };
 
         document
           .querySelector(DOM.btnEditModalSave)
-          .addEventListener("click", function() {
-            input = uIctrl.getInputEdit(type);
-            // 2. Add the item to the budget controller
+          .removeEventListener("click", savingEditModal);
 
-            // done solution for a repetitions from multiple eventListeners
-            if (
-              document
-                .querySelector(DOM.modalEditItem)
-                .classList.contains("is-active") &&
-              input.description !== "" &&
-              !isNaN(input.value) &&
-              input.value > 0
-            ) {
-              idNr = parseInt(id.slice(11));
-              walletCtrl.editItem(
-                input.type,
-                idNr,
-                input.description,
-                input.value
-              );
-              // 3. Add the item to the UIqweqweqwecompiz --replace
-
-              uIctrl.updateListItem(id, input.description, input.value);
-              uIctrl.clearFields();
-              updateWalletTotals();
-            }
-            // closes the expense entry modal
-            document
-              .querySelector(DOM.modalEditItem)
-              .classList.remove("is-active");
-          });
-
+        document
+          .querySelector(DOM.btnEditModalSave)
+          .addEventListener("click", savingEditModal);
       }
-
     };
 
-
     $(".lists").on("click", editModal);
-
 
     //TODO TEST!!! to delete!!!
     // document.addEventListener("keypress", function(ev) {
